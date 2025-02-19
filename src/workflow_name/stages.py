@@ -15,11 +15,10 @@ A suggested naming convention for a stages is:
   - This becomes self-explanatory when reading the code and output folders
 
 Each Stage should be a Class, and should inherit from one of
-  -SequencingGroupStage
-  -DatasetStage
-  -CohortStage
-  -MultiCohortStage
-
+  - SequencingGroupStage
+  - DatasetStage
+  - CohortStage
+  - MultiCohortStage
 """
 
 from workflow_name.jobs.DoSomethingGenericWithBash import echo_statement_to_file
