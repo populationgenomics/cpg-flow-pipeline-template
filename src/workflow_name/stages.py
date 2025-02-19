@@ -44,9 +44,10 @@ class DoSomethingGenericWithBash(MultiCohortStage):
         """
         This is where we define the expected outputs for this stage.
         """
+        # self.prefix() is a more concise shortcut for multicohort.analysis_dataset_bucket/ StageName / Hash
         return multicohort.analysis_dataset.prefix(category='tmp') / self.name / 'output.txt'
 
-    def queue_jobs(self, multicohort: MultiCohort, inputs: StageInput) -> StageOutput:
+    def queue_jobs(self, multicohort: MultiCohort, inputs: StageInput) -> StageOutput:  # noqa: ARG002
         """
         This is where we generate jobs for this stage.
         """
@@ -65,10 +66,11 @@ class DoSomethingGenericWithBash(MultiCohortStage):
 class PrintPreviousJobOutputInAPythonJob(MultiCohortStage):
     """
     This is a stage that cats the output of a previous stage to the logs.
+    This uses a method imported from a job file, run as a PythonJob.
     """
 
     def expected_outputs(self, multicohort: MultiCohort) -> Path:
-        return self.prefix() / 'cat.txt'
+        return multicohort.analysis_dataset.prefix(category='tmp') / self.name / 'cat.txt'
 
     def queue_jobs(self, multicohort: MultiCohort, inputs: StageInput) -> StageOutput:
         # get the previous stage's output
@@ -83,7 +85,10 @@ class PrintPreviousJobOutputInAPythonJob(MultiCohortStage):
         # run the PythonJob
         job = get_batch().new_python_job(f'Read {previous_stage}')
         job.image(config_retrieve(['workflow', 'driver_image']))
-        pyjob_output = job.call(print_file_contents, local_input)
+        pyjob_output = job.call(
+            print_file_contents,
+            local_input,
+        )
         get_batch().write_output(pyjob_output.as_str(), str(outputs))
 
         return self.make_outputs(multicohort, data=outputs, jobs=job)

@@ -13,7 +13,7 @@ def print_file_contents(input_file: str) -> str:
         input_file (str): the path to the file to print
     """
 
-    with open(input_file, 'r') as f:
+    with open(input_file) as f:
         contents = f.read()
 
     print(f'Contents of {input_file} on {DATE_STRING}:')

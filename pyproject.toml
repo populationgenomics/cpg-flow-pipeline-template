@@ -32,15 +32,6 @@ Repository = "https://github.com/populationgenomics/workflow_name"
 [project.optional-dependencies]
 test = [
     'bump2version',
-    'black',
-    'pre-commit',
-    'pytest',
-    'pytest-xdist>=3.6.0',
-]
-
-[project.optional-dependencies]
-test = [
-    'bump2version',
     'pre-commit',
     'pytest',
     'pytest-xdist>=3.6.0',

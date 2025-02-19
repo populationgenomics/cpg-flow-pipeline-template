@@ -3,7 +3,7 @@ A template repository to use as a base for CPG workflows using the cpg-flow pipe
 
 ## Purpose
 
-When migrating workflows from production-pipelines, this template respository structure can be used to start with a 
+When migrating workflows from production-pipelines, this template respository structure can be used to start with a
 sensible directory structure, and some suggested conventions for naming and placement of files.
 
 ```commandline
