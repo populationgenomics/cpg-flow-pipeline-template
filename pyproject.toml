@@ -6,6 +6,7 @@ build-backend = "setuptools.build_meta"
 name='workflow_name'
 description='Template workflow'
 readme = "README.md"
+requires-python = ">=3.10,<3.11"
 version='0.0.0'
 license={ "file" = "LICENSE" }
 classifiers=[
