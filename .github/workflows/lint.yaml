@@ -20,7 +20,7 @@ jobs:
         run: uv python install
 
       - name: Install pre-commit from dev dependencies
-        run: uv pip install ".[test]"
+        run: uv pip install --system ".[test]"
 
       - name: Install pre-commit hooks
         run: uv run pre-commit install --install-hooks
