@@ -21,16 +21,20 @@ Each Stage should be a Class, and should inherit from one of
   - MultiCohortStage
 """
 
+from typing import TYPE_CHECKING
+
 from workflow_name.jobs.DoSomethingGenericWithBash import echo_statement_to_file
 from workflow_name.jobs.PrintPreviousJobOutputInAPythonJob import print_file_contents
 
-# Path is a classic return type for a Stage, and is a shortcut for [CloudPath | pathlib.Path]
-from cpg_utils import Path
 from cpg_utils.config import config_retrieve
 from cpg_utils.hail_batch import get_batch
 
-from cpg_flow.stage import MultiCohortStage, StageInput, StageOutput, stage
-from cpg_flow.targets import MultiCohort
+from cpg_flow.stage import MultiCohortStage, stage
+
+if TYPE_CHECKING:
+    # Path is a classic return type for a Stage, and is a shortcut for [CloudPath | pathlib.Path]
+    from cpg_utils import Path
+    from cpg_flow.targets import MultiCohort, StageInput, StageOutput
 
 
 @stage()
@@ -39,14 +43,14 @@ class DoSomethingGenericWithBash(MultiCohortStage):
     This is a generic stage that runs a bash command.
     """
 
-    def expected_outputs(self, multicohort: MultiCohort) -> Path:
+    def expected_outputs(self, multicohort: 'MultiCohort') -> 'Path':
         """
         This is where we define the expected outputs for this stage.
         """
         # self.prefix() is a more concise shortcut for multicohort.analysis_dataset_bucket/ StageName / Hash
         return multicohort.analysis_dataset.prefix(category='tmp') / self.name / 'output.txt'
 
-    def queue_jobs(self, multicohort: MultiCohort, inputs: StageInput) -> StageOutput:  # noqa: ARG002
+    def queue_jobs(self, multicohort: 'MultiCohort', inputs: 'StageInput') -> 'StageOutput':  # noqa: ARG002
         """
         This is where we generate jobs for this stage.
         """
@@ -68,10 +72,10 @@ class PrintPreviousJobOutputInAPythonJob(MultiCohortStage):
     This uses a method imported from a job file, run as a PythonJob.
     """
 
-    def expected_outputs(self, multicohort: MultiCohort) -> Path:
+    def expected_outputs(self, multicohort: 'MultiCohort') -> 'Path':
         return multicohort.analysis_dataset.prefix(category='tmp') / self.name / 'cat.txt'
 
-    def queue_jobs(self, multicohort: MultiCohort, inputs: StageInput) -> StageOutput:
+    def queue_jobs(self, multicohort: 'MultiCohort', inputs: 'StageInput') -> 'StageOutput':
         # get the previous stage's output
         previous_stage = inputs.as_str(multicohort, DoSomethingGenericWithBash)
 
