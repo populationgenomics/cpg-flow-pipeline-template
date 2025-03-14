@@ -33,9 +33,6 @@ Repository = "https://github.com/populationgenomics/workflow_name"
 # various requirements when running cpg-flow/analysis-runner
 cpg = [
     'cpg-flow>=v0.1.2',
-    'cpg-utils',
-    'google-cloud-storage==3.1.0',  # pin this to stop pip going crazy
-    'google-api-python-client',
 ]
 test = [
     'bump2version',
