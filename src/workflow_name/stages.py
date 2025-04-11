@@ -1,7 +1,14 @@
 """
 This file exists to define all the Stages for the workflow.
-The logic for each stage can be contained here (if it is not too complex),
-or can be delegated to a separate file in jobs.
+The logic for each stage should be delegated to a separate file in jobs.
+
+In this repository template I've segregated stages (this file), jobs (logic) and python_jobs (methods to be invoked only
+as python jobs). This means that even the most trivial Stage has it's logic in a separate file. In reality Stages are
+not likely to consist of single line print statements, so it's good to enforces strict separation of logic.
+
+- A Stage contains the definition of inputs, outputs, and it's place in the workflow DAG (via required_stages)
+- A job encapsulates all the logic required to complete the Stage, and is contained in a separate file
+- A stage will call its corresponding job to queu operations, and the job will return the Hail Batch Job object(s)
 
 Naming conventions for Stages are not enforced, but a series of recommendations have been made here:
 
@@ -24,10 +31,7 @@ Each Stage should be a Class, and should inherit from one of
 from typing import TYPE_CHECKING
 
 from workflow_name.jobs.DoSomethingGenericWithBash import echo_statement_to_file
-from workflow_name.jobs.PrintPreviousJobOutputInAPythonJob import print_file_contents
-
-from cpg_utils.config import config_retrieve
-from cpg_utils.hail_batch import get_batch
+from workflow_name.jobs.PrintPreviousJobOutputInAPythonJob import set_up_printing_python_job
 
 from cpg_flow.stage import MultiCohortStage, stage
 
@@ -69,7 +73,7 @@ class DoSomethingGenericWithBash(MultiCohortStage):
 class PrintPreviousJobOutputInAPythonJob(MultiCohortStage):
     """
     This is a stage that cats the output of a previous stage to the logs.
-    This uses a method imported from a job file, run as a PythonJob.
+    It is implemented here as a Stage which calls a job method - that job then creates and queues a PythonJob
     """
 
     def expected_outputs(self, multicohort: 'MultiCohort') -> 'Path':
@@ -77,21 +81,15 @@ class PrintPreviousJobOutputInAPythonJob(MultiCohortStage):
 
     def queue_jobs(self, multicohort: 'MultiCohort', inputs: 'StageInput') -> 'StageOutput':
         # get the previous stage's output
-        previous_stage = inputs.as_str(multicohort, DoSomethingGenericWithBash)
-
-        # localise the file
-        local_input = get_batch().read_input(previous_stage)
+        previous_output = inputs.as_str(multicohort, DoSomethingGenericWithBash)
 
         # generate the expected output path
         outputs = self.expected_outputs(multicohort)
 
         # run the PythonJob
-        job = get_batch().new_python_job(f'Read {previous_stage}')
-        job.image(config_retrieve(['workflow', 'driver_image']))
-        pyjob_output = job.call(
-            print_file_contents,
-            local_input,
+        job = set_up_printing_python_job(
+            input_file=previous_output,
+            output_file=str(outputs),
         )
-        get_batch().write_output(pyjob_output.as_str(), str(outputs))
 
         return self.make_outputs(multicohort, data=outputs, jobs=job)
