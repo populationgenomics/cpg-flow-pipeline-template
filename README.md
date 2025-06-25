@@ -1,7 +1,7 @@
 # cpg-flow-pipeline-template
 A template repository to use as a base for CPG workflows using the cpg-flow pipeline framework
 
-Current version: 0.1.0
+Current version: 0.1.1
 
 ## Purpose
 
