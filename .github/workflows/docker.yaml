@@ -53,6 +53,8 @@ jobs:
 
       - name: handle failed authentication
         if: steps.google-cloud-auth.outcome =='failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           echo "Authentication to Google Cloud failed, attach relevant auth credentials."
           gh run cancel ${{ github.run_id }}
