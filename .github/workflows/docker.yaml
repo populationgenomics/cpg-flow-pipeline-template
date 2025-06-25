@@ -46,9 +46,17 @@ jobs:
       - id: 'google-cloud-auth'
         name: 'Authenticate to Google Cloud'
         uses: google-github-actions/auth@v2
+        continue-on-error: true
         with:
           workload_identity_provider: ${{ secrets.DEV_IMG_DEPLOYER_POOL}}
           service_account: ${{ secrets.DEV_IMG_DEPLOYER_SA }}
+
+      - name: handle failed authentication
+        if: steps.google-cloud-auth.outcome =='failure'
+        run: |
+          echo "Authentication to Google Cloud failed, attach relevant auth credentials."
+          gh run cancel ${{ github.run_id }}
+          exit 0
 
       - name: set up gcloud sdk
         uses: google-github-actions/setup-gcloud@v2
