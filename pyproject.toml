@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 # TODO(you): update this to reflect the project's name & description
@@ -9,7 +9,7 @@ description='Template workflow'
 readme = "README.md"
 # currently cpg-flow is pinned to this version
 requires-python = ">=3.10,<3.11"
-version='0.1.0'
+version="0.1.0"
 license={ "file" = "LICENSE" }
 classifiers=[
     'Environment :: Console',
@@ -22,7 +22,8 @@ classifiers=[
 ]
 
 dependencies=[
-    'cpg-flow>=v0.2.1',
+    'cpg-flow==v0.2.4',
+    'hatchling',
 ]
 
 [project.urls]
@@ -32,25 +33,20 @@ Repository = "https://github.com/populationgenomics/workflow_name"
 [project.optional-dependencies]
 # various requirements when running cpg-flow/analysis-runner
 test = [
-    'bump2version',
+    'bump-my-version',
     'pre-commit',
     'pytest',
 ]
 
 [project.scripts]
-# home for any scripts which will be installed
-# e.g. this minimal "Hello, World!" script which can be run by alias when this package is installed
-# $ say_hello
-# >> Hello, World!
-# $ say_hello cpg-flow
-# >> Hello, cpg-flow!
-say_hello = 'workflow_name.scripts.hello_world:cli_main'
-
 # the workflow runner script - entrypoint for the pipeline
 run_workflow = 'workflow_name.run_workflow:cli_main'
 
-[tool.setuptools]
-package-dir = {"" = "src"}
+[tool.hatch.build.targets.wheel]
+packages = ["src/workflow_name"]
+
+[tool.hatch.build.targets.wheel.sources]
+"src" = ""
 
 [options]
 include_package_data = true
@@ -89,6 +85,8 @@ quote-style = "single"
 # ignore pydocstyle, flake8-boolean-trap (FBT)
 select = ["A", "B", "C", "E", "F", "G", "I", "N", "Q", "S", "W", "ANN", "ARG", "BLE", "COM", "DJ", "DTZ", "ERA", "EXE", "ICN", "ISC", "NPY", "PD", "PGH", "PIE", "PL", "PYI", "RET", "RSE", "RUF", "SIM", "SLF", "TCH", "TID", "UP", "YTT"]
 
+extend-select = ["I"]
+
 fixable = ["A", "B", "C", "D", "E", "F", "G", "I", "N", "Q", "S", "T", "W", "ANN", "ARG", "BLE", "COM", "DJ", "DTZ", "ERA", "EXE", "FBT", "ICN", "ISC", "NPY", "PD", "PGH", "PIE", "PL", "PYI", "RET", "RSE", "RUF", "SIM", "SLF", "TCH", "TID", "UP", "YTT"]
 
 ignore = [
@@ -103,13 +101,42 @@ ignore = [
     "G004", # Logging statement uses f-string
     "PLW0603", # Using the global statement to update `<VAR>` is discouraged
     "Q000", # Single quotes found but double quotes preferred
-    "S101", # Use of assert detected
     "PLR0912", # Too many branches (> 12)
     "PLR0913", # Too many arguments in function (> 5)
-    "C901", # method is too complex (> 10 conditions)
     "N999", # invalid module name (not lower-case and potholes)
-    "I001", # Import block is un-sorted or un-formatted (to remove soon)
 ]
 
 [tool.ruff.lint.isort]
 section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+
+[tool.ruff.lint.isort.sections]
+cpg = ["metamist", "talos"]
+hail = ["hail"]
+
+[tool.ruff.per-file-ignores]
+"test/**/*.py" = [
+    "S101", # Use of assert detected
+]
+
+[tool.bumpversion]
+current_version = "0.1.0"
+parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
+serialize = ["{major}.{minor}.{patch}"]
+commit = true
+message = "Bump version: {current_version} → {new_version}"
+commit_args = ""
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search = 'version="{current_version}"'
+replace = "version='{new_version}'"
+
+[[tool.bumpversion.files]]
+filename = ".github/workflows/docker.yaml"
+search = "VERSION: {current_version}"
+replace = "VERSION: {new_version}"
+
+[[tool.bumpversion.files]]
+filename = "README.md"
+search = "{current_version}"
+replace = "{new_version}"
