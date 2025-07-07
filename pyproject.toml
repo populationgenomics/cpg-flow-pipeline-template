@@ -22,7 +22,7 @@ classifiers=[
 ]
 
 dependencies=[
-    'cpg-flow==v0.2.4',
+    'cpg-flow',
     'hatchling',
 ]
 
@@ -107,10 +107,10 @@ ignore = [
 ]
 
 [tool.ruff.lint.isort]
-section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+section-order = ["future", "standard-library", "third-party", "hail", "first-party", "cpg", "local-folder"]
 
 [tool.ruff.lint.isort.sections]
-cpg = ["metamist", "talos"]
+cpg = ["metamist", "cpg-utils", "cpg-flow"]
 hail = ["hail"]
 
 [tool.ruff.per-file-ignores]
