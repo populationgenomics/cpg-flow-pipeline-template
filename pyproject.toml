@@ -115,9 +115,9 @@ search = 'version="{current_version}"'
 replace = "version='{new_version}'"
 
 [[tool.bumpversion.files]]
-filename = ".github/workflows/docker.yaml"
-search = "VERSION: {current_version}"
-replace = "VERSION: {new_version}"
+filename = "DOCKERFILE"
+search = "VERSION={current_version}"
+replace = "VERSION={new_version}"
 
 [[tool.bumpversion.files]]
 filename = "README.md"
