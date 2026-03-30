@@ -20,9 +20,10 @@ src
 │   └── utils.py
 ```
 
-`workflow_name` occurs in a number of places ([pyproject.toml](pyproject.toml), [src](src), and the workflow name in the
-template config file). It is intended that you remove this generic placeholder name, and replace it with the name of
-your workflow.
+`workflow_name` occurs in a number of places ([pyproject.toml](pyproject.toml), [src](src), and the workflow name in the template
+config file). Crucially it also appears in [the image builder workflow](.github/workflows/get_version.py), which
+determines the names for images built from this repository. It is intended that you remove this generic placeholder
+name, and replace it with the name of your workflow.
 
 `stages.py` contains Stages in the workflow, with the actual logic imported from files in `jobs`.
 
