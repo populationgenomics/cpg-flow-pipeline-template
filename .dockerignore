@@ -1,11 +1,8 @@
-build
-.venv
-venv
+build/
+.venv/
+venv/
 *.egg-info/
-hail-*
 .git
-work
-test
+test/
+work/
 *.log*
-*_results
-*_outputs
