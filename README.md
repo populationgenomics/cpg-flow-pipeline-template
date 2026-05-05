@@ -1,23 +1,36 @@
 # cpg-flow-pipeline-template
-A template repository to use as a base for CPG workflows using the cpg-flow pipeline framework
+
+A template repository to use as a base for CPG workflows using the [cpg-flow](https://github.com/populationgenomics/cpg-flow) pipeline framework.
 
 Current version: 0.1.1
 
-## Purpose
+> **Upstream**: This template builds on the conventions from [cpg-python-template-repo](https://github.com/populationgenomics/cpg-python-template-repo), adding cpg-flow-specific architecture.
 
-When migrating workflows from production-pipelines, this template respository structure can be used to start with a
-sensible directory structure, and some suggested conventions for naming and placement of files.
+## Quick Start
 
-```commandline
+1. Create a new repo from this template
+2. Rename `workflow_name` everywhere — directory name under `src/`, `pyproject.toml`, `Dockerfile`, imports, `get_version.py`
+3. Update `pyproject.toml`: set name, description, add tool-specific dependencies
+4. Update `config_template.toml`: replace placeholder config with your tool's settings
+5. Update `run_workflow.py`: set workflow name and wire up your top-level stage(s)
+6. Write your stages, jobs, and scripts
+7. Set up GitHub secrets for CI/CD (see [CPG_FLOW_TEMPLATE_GUIDE.md](CPG_FLOW_TEMPLATE_GUIDE.md#8-cicd))
+8. Verify: `pip install .[test]`, `pre-commit run --all-files`, `pytest test`, `docker build .`
+
+See [CPG_FLOW_TEMPLATE_GUIDE.md](CPG_FLOW_TEMPLATE_GUIDE.md) for detailed reference.
+
+## Directory Structure
+
+```
 src
 ├── workflow_name
-│   ├── __init__.py
-│   ├── config_template.toml
-│   ├── jobs
-│   │   └── LogicForAStage.py
-│   ├── main.py
-│   ├── stages.py
-│   └── utils.py
+│   ├── __init__.py
+│   ├── config_template.toml
+│   ├── jobs
+│   │   └── LogicForAStage.py
+│   ├── run_workflow.py
+│   ├── stages.py
+│   └── utils.py
 ```
 
 `workflow_name` occurs in a number of places ([pyproject.toml](pyproject.toml), [src](src), and the workflow name in the template
