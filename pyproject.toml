@@ -72,7 +72,7 @@ select = ["A", "B", "C", "E", "F", "G", "I", "N", "Q", "S", "W", "ANN", "ARG", "
 
 extend-select = ["I"]
 
-fixable = ["A", "B", "C", "D", "E", "F", "G", "I", "N", "Q", "S", "T", "W", "ANN", "ARG", "BLE", "COM", "DJ", "DTZ", "ERA", "EXE", "FBT", "ICN", "ISC", "NPY", "PD", "PGH", "PIE", "PL", "PYI", "RET", "RSE", "RUF", "SIM", "SLF", "TCH", "TID", "UP", "YTT"]
+fixable = ["ALL"]
 
 ignore = [
     "ANN001", # Missing type annotation for function argument
@@ -85,17 +85,17 @@ ignore = [
     "PLR0913", # Too many arguments in function (> 5)
 ]
 
+[tool.ruff.lint.per-file-ignores]
+"test/**/*.py" = [
+    "S101", # Use of assert detected
+]
+
 [tool.ruff.lint.isort]
 section-order = ["future", "standard-library", "third-party", "hail", "first-party", "cpg", "local-folder"]
 
 [tool.ruff.lint.isort.sections]
 cpg = ["metamist", "cpg_utils", "cpg_flow"]
 hail = ["hail"]
-
-[tool.ruff.per-file-ignores]
-"test/**/*.py" = [
-    "S101", # Use of assert detected
-]
 
 [tool.bumpversion]
 current_version = "0.1.1"

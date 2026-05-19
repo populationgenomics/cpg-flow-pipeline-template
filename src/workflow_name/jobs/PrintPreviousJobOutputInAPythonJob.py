@@ -4,9 +4,9 @@ trivially simple python job example, using a utility constant
 
 from typing import TYPE_CHECKING
 
-from cpg_utils import Path, config, hail_batch
-
 from workflow_name.utils import DATE_STRING
+
+from cpg_utils import Path, config, hail_batch
 
 if TYPE_CHECKING:
     from hailtop.batch.job import Job

@@ -28,11 +28,11 @@ Each Stage should be a Class, and should inherit from one of the following base 
   - MultiCohortStage
 """
 
-from cpg_flow import stage, targets
-from cpg_utils import Path
-
 from workflow_name.jobs.DoSomethingGenericWithBash import echo_statement_to_file
 from workflow_name.jobs.PrintPreviousJobOutputInAPythonJob import set_up_printing_python_job
+
+from cpg_flow import stage, targets
+from cpg_utils import Path
 
 
 @stage.stage()
