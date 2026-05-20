@@ -3,6 +3,7 @@ FROM australia-southeast1-docker.pkg.dev/cpg-common/images/cpg_hail_gcloud:0.2.1
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV VERSION=0.1.1
 
+ENV DEBIAN_FRONTEND=noninteractive
 WORKDIR /workflow_name
 
 COPY src src/

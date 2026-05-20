@@ -14,10 +14,9 @@ Current version: 0.1.1
 4. Update `config_template.toml`: replace placeholder config with your tool's settings
 5. Update `run_workflow.py`: set workflow name and wire up your top-level stage(s)
 6. Write your stages, jobs, and scripts
-7. Set up GitHub secrets for CI/CD (see [CPG_FLOW_TEMPLATE_GUIDE.md](CPG_FLOW_TEMPLATE_GUIDE.md#8-cicd))
+7. Set up GitHub secrets for CI/CD
 8. Verify: `pip install .[test]`, `pre-commit run --all-files`, `pytest test`, `docker build .`
 
-See [CPG_FLOW_TEMPLATE_GUIDE.md](CPG_FLOW_TEMPLATE_GUIDE.md) for detailed reference.
 
 ## Directory Structure
 
