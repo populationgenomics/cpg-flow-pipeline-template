@@ -11,10 +11,10 @@ This is re-implemented as a simpler form, only knowing how to build a single wor
 
 from argparse import ArgumentParser
 
-from cpg_flow.workflow import run_workflow
-
 # TODO(you) import your own Stages
 from workflow_name.stages import DoSomethingGenericWithBash, PrintPreviousJobOutputInAPythonJob
+
+from cpg_flow.workflow import run_workflow
 
 
 def cli_main():
