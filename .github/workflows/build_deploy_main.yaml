@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   id-token: write
@@ -18,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     outputs:
-      matrix: ${{ steps.get_next_version.outputs.next_version }}
+      next_version: ${{ steps.get_next_version.outputs.next_version }}
     steps:
       - name: 'Checkout repo'
         uses: actions/checkout@v4
@@ -35,7 +36,7 @@ jobs:
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v2'
         with:
-          workload_identity_provider: ${{ secrets.PROD_IMG_DEPLOYER_POOL }}
+          workload_identity_provider: ${{ secrets.PROD_IMG_DEPLOYER_POOL}}
           service_account: ${{ secrets.PROD_IMG_DEPLOYER_SA }}
 
       - id: 'google-cloud-sdk-setup'
@@ -49,15 +50,12 @@ jobs:
         run: |
           next_version=$(python .github/workflows/get_version.py)
           echo "next_version=$next_version" >> "$GITHUB_OUTPUT"
-
   build_deploy_main:
     runs-on: ubuntu-latest
     environment: production
     needs:
       - get_next_version
-    if: ${{ needs.get_next_version.outputs.matrix != '{"include":[]}' && needs.get_next_version.outputs.matrix != '' }}
-    strategy:
-      matrix: ${{ fromJson(needs.get_next_version.outputs.matrix) }}
+    if: ${{ needs.get_next_version.outputs.next_version != '' && github.event_name == 'push' }}
     env:
       DOCKER_BUILDKIT: 1
       BUILDKIT_PROGRESS: plain
@@ -71,7 +69,7 @@ jobs:
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v2'
         with:
-          workload_identity_provider: ${{ secrets.PROD_IMG_DEPLOYER_POOL }}
+          workload_identity_provider: ${{ secrets.PROD_IMG_DEPLOYER_POOL}}
           service_account: ${{ secrets.PROD_IMG_DEPLOYER_SA }}
 
       - id: 'google-cloud-sdk-setup'
@@ -80,13 +78,11 @@ jobs:
 
       - run: |
           gcloud auth configure-docker ${{ env.DOCKER_PREFIX }}
-
       - name: 'build image'
         run: |
-          docker build . \
-          --build-arg VERSION=${{ matrix.tag }} \
-          --tag ${{ env.IMAGES_PREFIX }}/${{ matrix.name }}:${{ matrix.tag }}
-
+          docker build . -f Dockerfile \
+          --build-arg VERSION=${{ needs.get_next_version.outputs.next_version }} \
+          --tag ${{ env.IMAGES_PREFIX }}/cpg-flow-example:${{ needs.get_next_version.outputs.next_version }}
       - name: 'push image'
         run: |
-          docker push "${{ env.IMAGES_PREFIX }}/${{ matrix.name }}:${{ matrix.tag }}"
+          docker push "${{ env.IMAGES_PREFIX }}/cpg-flow-example:${{ needs.get_next_version.outputs.next_version }}"
