@@ -16,7 +16,7 @@ Current version: 0.1.1
 6. Update `run_workflow.py`: set workflow name and wire up your top-level stage(s)
 7. ** Write your stages, jobs, and scripts **
 8. **Update `.pre-commit-config.yaml`**: Ensure ruff and mypy point to the correct package name
-9. Set up GitHub secrets for CI/CD 
+9. Set up GitHub secrets for CI/CD
 10. Verify: `pip install .[test]`, `pre-commit run --all-files`, `pytest test`, `docker build .`
 11. **Verify quotes**: Ensure bump-my-version and ruff agree on quote style (`'` single quotes — ruff enforces this via `Q000` ignore + `quote-style = 'single'`)
 
