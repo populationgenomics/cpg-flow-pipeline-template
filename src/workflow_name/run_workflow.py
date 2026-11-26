@@ -34,7 +34,8 @@ def cli_main():
 
     stages = [DoSomethingGenericWithBash, PrintPreviousJobOutputInAPythonJob]
 
-    run_workflow(stages=stages, dry_run=args.dry_run)
+    # TODO(you) name your workflow
+    run_workflow(name='workflow_name', stages=stages, dry_run=args.dry_run)
 
 
 if __name__ == '__main__':
